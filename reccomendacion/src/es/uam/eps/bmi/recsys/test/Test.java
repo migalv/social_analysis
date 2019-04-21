@@ -10,7 +10,7 @@ import es.uam.eps.bmi.recsys.recommender.Recommender;
 import es.uam.eps.bmi.recsys.data.RatingsImpl;
 import es.uam.eps.bmi.recsys.data.StringParser;
 import es.uam.eps.bmi.recsys.metric.Metric;
-import es.uam.eps.bmi.recsys.metric.Precision;
+/*import es.uam.eps.bmi.recsys.metric.Precision;
 import es.uam.eps.bmi.recsys.metric.Recall;
 import es.uam.eps.bmi.recsys.metric.Rmse;
 import es.uam.eps.bmi.recsys.recommender.AverageRecommender;
@@ -23,7 +23,7 @@ import es.uam.eps.bmi.recsys.recommender.UserKNNRecommender;
 import es.uam.eps.bmi.recsys.recommender.similarity.CosineFeatureSimilarity;
 import es.uam.eps.bmi.recsys.recommender.similarity.CosineItemSimilarity;
 import es.uam.eps.bmi.recsys.recommender.similarity.CosineUserSimilarity;
-import es.uam.eps.bmi.recsys.recommender.similarity.JaccardFeatureSimilarity;
+import es.uam.eps.bmi.recsys.recommender.similarity.JaccardFeatureSimilarity;*/
 import es.uam.eps.bmi.recsys.recommender.similarity.Similarity;
 import es.uam.eps.bmi.recsys.util.Timer;
 import java.io.File;
