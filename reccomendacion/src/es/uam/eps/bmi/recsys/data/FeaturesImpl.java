@@ -68,17 +68,13 @@ public class FeaturesImpl<F> implements Features<F> {
 
     @Override
     public Set getFeatures(int id) {
-        return items.get(id).keySet();
+        return (items.containsKey(id))? items.get(id).keySet():null;
     }
 
     @Override
     public Double getFeature(int id, Object feature) {
-        if (items.containsKey(id)) {
-            if (items.get(id).containsKey(feature)) {
-                return items.get(id).get(feature);
-            }
-        }
-        return null;
+        return (items.containsKey(id) && items.get(id).containsKey(feature) )? 
+                items.get(id).get(feature):null;
     }
 
     @Override
@@ -103,7 +99,7 @@ public class FeaturesImpl<F> implements Features<F> {
 
     @Override
     public Set getIDs() {
-        return items.keySet();
+        return (items.size()>0)? items.keySet():null;
     }
 
 }

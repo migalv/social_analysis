@@ -10,6 +10,9 @@ import es.uam.eps.bmi.recsys.recommender.Recommender;
 import es.uam.eps.bmi.recsys.data.RatingsImpl;
 import es.uam.eps.bmi.recsys.data.StringParser;
 import es.uam.eps.bmi.recsys.metric.Metric;
+import es.uam.eps.bmi.recsys.metric.Precision;
+import es.uam.eps.bmi.recsys.metric.Recall;
+import es.uam.eps.bmi.recsys.metric.Rmse;
 /*import es.uam.eps.bmi.recsys.metric.Precision;
 import es.uam.eps.bmi.recsys.metric.Recall;
 import es.uam.eps.bmi.recsys.metric.Rmse;
@@ -44,7 +47,7 @@ public class Test {
         testDataset("data/toy-ratings.dat", "data/toy-item-features.dat", "\t", new IntParser(), 1, 2);
         System.out.println("=========================");
         System.out.println("Testing MovieLens \"latest-small\" dataset");
-        testDataset("data/ratings.csv", "data/tags.csv", ",", new StringParser(), 35, 1176);
+        //testDataset("data/ratings.csv", "data/tags.csv", ",", new StringParser(), 35, 1176);
     }
     
     static <F>void toyTest(String dataset, String separator, Parser<F> featureParser) throws FileNotFoundException {
@@ -57,7 +60,7 @@ public class Test {
             new Recall(test, 3, 5),
         };
         
-        evaluateRecommenders(train, features, 5, 100, metrics);
+        //evaluateRecommenders(train, features, 5, 100, metrics);
     }
     
     static <F>void testDataset(String ratingsFile, String featuresFile, String separator, Parser<F> featureParser, int user, int item) 
@@ -72,19 +75,19 @@ public class Test {
         
         testData(ratings, features, user, item);
         
-        testRecommenders(ratings, features, k, n, 3, 4);
+        //testRecommenders(ratings, features, k, n, 3, 4);
 
         Ratings folds[] = ratings.randomSplit(0.8);
         Ratings train = folds[0];
         Ratings test = folds[1];
         
-        Metric metrics[] = new Metric [] {
+        /*Metric metrics[] = new Metric [] {
             new Rmse(test),
             new Precision(test, threshold, cutoff),
             new Recall(test, threshold, cutoff),
         };
         
-        evaluateRecommenders(train, features, k, n, metrics);
+        evaluateRecommenders(train, features, k, n, metrics);*/
     }
     
     static <F>void testData(Ratings ratings, Features<F> features, int user, int item) {
@@ -102,7 +105,7 @@ public class Test {
         System.out.println();
     }
     
-    static <F> void testRecommenders(Ratings ratings, Features<F> features, int k, int n, int nUsers, int nItems) throws FileNotFoundException {
+    /*static <F> void testRecommenders(Ratings ratings, Features<F> features, int k, int n, int nUsers, int nItems) throws FileNotFoundException {
         Timer.reset();
         testRecommender(new RandomRecommender(ratings), n, nUsers, nItems);
         Timer.reset();
@@ -124,9 +127,9 @@ public class Test {
         Timer.reset();
         sim = new JaccardFeatureSimilarity<F>(features);
         testRecommender(new ItemNNRecommender(ratings, sim), n, nUsers, nItems);
-    }
+    }*/
 
-    static <U extends Comparable<U>,I extends Comparable<I>,F> void evaluateRecommenders(Ratings ratings, Features<F> features, int k, int n, Metric metrics[]) {
+    /*static <U extends Comparable<U>,I extends Comparable<I>,F> void evaluateRecommenders(Ratings ratings, Features<F> features, int k, int n, Metric metrics[]) {
         Timer.reset();
         evaluateRecommender(new RandomRecommender(ratings), n, metrics);
         Timer.reset();
@@ -148,7 +151,7 @@ public class Test {
         Timer.reset();
         sim = new JaccardFeatureSimilarity<F>(features);
         evaluateRecommender(new ItemNNRecommender(ratings, sim), n, metrics);
-    }
+    }*/
 
     static <U,I extends Comparable<I>> void testRecommender(Recommender recommender, int n, int nUsers, int nItems) throws FileNotFoundException {
         System.out.println("-------------------------");

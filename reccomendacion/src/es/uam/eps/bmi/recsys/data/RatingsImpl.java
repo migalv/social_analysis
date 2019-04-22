@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,8 +23,8 @@ import java.util.logging.Logger;
  */
 public class RatingsImpl implements Ratings {
 
-    private final String dataPath;
-    private final String separator;
+    private String dataPath;
+    private String separator;
     private final Map<Integer, Set<Integer>> users;
     private final Map<Integer, Set<Integer>> items;
     private final Map<Integer, Map<Integer, Double>> ratings;
@@ -39,6 +40,15 @@ public class RatingsImpl implements Ratings {
 
         //Por ultimo leemos los datos de todos los elementos
         this.getAllRatings();
+    }
+
+    public RatingsImpl() {
+
+        //Inicializamos los diferentes maps
+        users = new HashMap<>();
+        items = new HashMap<>();
+        ratings = new HashMap<>();
+
     }
 
     private void getAllRatings() {
@@ -102,18 +112,12 @@ public class RatingsImpl implements Ratings {
 
     @Override
     public Set<Integer> getUsers(int item) {
-        if (items.containsKey(item)) {
-            return items.get(item);
-        }
-        return null;
+        return(items.containsKey(item))? items.get(item):null;
     }
 
     @Override
     public Set<Integer> getItems(int user) {
-        if (users.containsKey(user)) {
-            return users.get(user);
-        }
-        return null;
+        return (users.containsKey(user))? users.get(user):null;
     }
 
     @Override
@@ -128,12 +132,37 @@ public class RatingsImpl implements Ratings {
 
     @Override
     public int nRatings() {
-        return this.ratings.size();
+        int nRatings=0;
+        
+        nRatings = this.getUsers().stream().map((current_user) -> this.getItems(current_user).size()).reduce(nRatings, Integer::sum);
+        
+        return nRatings;
     }
 
     @Override
     public Ratings[] randomSplit(double ratio) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Ratings folds[];
+        folds = new Ratings[2];
+        Random randomNumber = new Random();
+
+        folds[0] = new RatingsImpl();
+        folds[1] = new RatingsImpl();
+
+        //Recorremos toda la lista de ratings
+        this.ratings.forEach((user, rates) -> {
+            rates.forEach((item, finalRate) -> {
+
+                //Si el random supera el ratio lo metemos en la segunda lista de test
+                if (randomNumber.nextFloat() > ratio) {
+                    folds[1].rate(user, item, finalRate);
+                } else {//En caso contrario lo añadimos a la primera lista de train
+                    folds[0].rate(user, item, finalRate);
+                }
+            });
+        });
+
+        return folds;
+
     }
 
 }
