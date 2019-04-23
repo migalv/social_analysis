@@ -81,13 +81,13 @@ public class Test {
         Ratings train = folds[0];
         Ratings test = folds[1];
         
-        /*Metric metrics[] = new Metric [] {
+        Metric metrics[] = new Metric [] {
             new Rmse(test),
             new Precision(test, threshold, cutoff),
             new Recall(test, threshold, cutoff),
         };
         
-        evaluateRecommenders(train, features, k, n, metrics);*/
+        /*evaluateRecommenders(train, features, k, n, metrics);*/
     }
     
     static <F>void testData(Ratings ratings, Features<F> features, int user, int item) {
