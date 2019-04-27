@@ -104,10 +104,7 @@ public class RatingsImpl implements Ratings {
 
     @Override
     public Double getRating(int user, int item) {
-        if (ratings.containsKey(user)) {
-            return ratings.get(user).get(item);
-        }
-        return null;
+        return (ratings.containsKey(user))? ratings.get(user).get(item):null;
     }
 
     @Override

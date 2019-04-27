@@ -11,15 +11,13 @@ import es.uam.eps.bmi.recsys.data.Ratings;
 import es.uam.eps.bmi.recsys.ranking.Ranking;
 import es.uam.eps.bmi.recsys.ranking.RankingImpl;
 
-
-
 /**
  *
  * @author sergio
  */
 abstract class AbstractRecommender implements Recommender {
 
-    private final Ratings ratings;
+    final Ratings ratings;
 
     public AbstractRecommender(Ratings ratings) {
         this.ratings = ratings;
@@ -31,21 +29,24 @@ abstract class AbstractRecommender implements Recommender {
 
         //Recorremos todos los usuarios
         ratings.getUsers().forEach((current_user) -> {
-            Ranking rank= new RankingImpl(cutoff);
-            
+            Ranking rank = new RankingImpl(cutoff);
+
             //Por cada usuario recomendamos los mejores items que no ha calificado
             ratings.getItems().forEach((current_item) -> {
                 if (!ratings.getItems(current_user).contains(current_item)) {
                     //Obtenemos score y lo añadimos al ranking
-                    double finalScore=this.score(current_item, current_item);
-                    rank.add(current_item, finalScore);
+                    double finalScore = this.score(current_user, current_item);
+
+                    if (finalScore != 0) {
+                        rank.add(current_item, finalScore);
+                    }
                 }
             });
-            
+
             //Finalmente obtenemos los mejores scores de cada usuario y lo añadimos a la recomendacion
             recommend.add(current_user, rank);
         });
-        
+
         return recommend;
     }
 

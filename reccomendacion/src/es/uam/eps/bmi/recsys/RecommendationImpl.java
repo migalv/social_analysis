@@ -44,7 +44,7 @@ public class RecommendationImpl implements Recommendation {
     public void print(PrintStream out) {
         this.getUsers().forEach((current_user) -> {
             for (RankingElement current_ranking : this.getRecommendation(current_user)) {
-                out.println(current_ranking.getID() + "\t" + current_ranking.getScore());
+                out.println(current_user+"\t"+current_ranking.getID() + "\t" + current_ranking.getScore());
             }
         });
     }
@@ -54,16 +54,18 @@ public class RecommendationImpl implements Recommendation {
         int user_n = 0;
         Set<Integer> users = this.getUsers();
 
+        Iterator<Integer> current_user = users.iterator();
+        
         while (user_n < userCutoff) {
             int item_n = 0;
 
-            Iterator<Integer> current_user = users.iterator();
             if (current_user.hasNext()) {
-                for (RankingElement current_ranking : this.getRecommendation(current_user.next())) {
-                    if(item_n < itemCutoff){
-                        out.println(current_ranking.getID() + "\t" + current_ranking.getScore());
+                int current_user_ID=current_user.next();
+                for (RankingElement current_ranking : this.getRecommendation(current_user_ID)) {
+                    if (item_n < itemCutoff) {
+                        out.println(current_user_ID + "\t" + current_ranking.getID() + "\t" + current_ranking.getScore());
                         item_n++;
-                    }else{
+                    } else {
                         break;
                     }
                 }
@@ -73,5 +75,5 @@ public class RecommendationImpl implements Recommendation {
         }
 
     }
-
+    
 }

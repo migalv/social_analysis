@@ -13,7 +13,7 @@ import es.uam.eps.bmi.recsys.metric.Metric;
 import es.uam.eps.bmi.recsys.metric.Precision;
 import es.uam.eps.bmi.recsys.metric.Recall;
 import es.uam.eps.bmi.recsys.metric.Rmse;
-/*import es.uam.eps.bmi.recsys.metric.Precision;
+import es.uam.eps.bmi.recsys.metric.Precision;
 import es.uam.eps.bmi.recsys.metric.Recall;
 import es.uam.eps.bmi.recsys.metric.Rmse;
 import es.uam.eps.bmi.recsys.recommender.AverageRecommender;
@@ -26,7 +26,7 @@ import es.uam.eps.bmi.recsys.recommender.UserKNNRecommender;
 import es.uam.eps.bmi.recsys.recommender.similarity.CosineFeatureSimilarity;
 import es.uam.eps.bmi.recsys.recommender.similarity.CosineItemSimilarity;
 import es.uam.eps.bmi.recsys.recommender.similarity.CosineUserSimilarity;
-import es.uam.eps.bmi.recsys.recommender.similarity.JaccardFeatureSimilarity;*/
+import es.uam.eps.bmi.recsys.recommender.similarity.JaccardFeatureSimilarity;
 import es.uam.eps.bmi.recsys.recommender.similarity.Similarity;
 import es.uam.eps.bmi.recsys.util.Timer;
 import java.io.File;
@@ -60,7 +60,7 @@ public class Test {
             new Recall(test, 3, 5),
         };
         
-        //evaluateRecommenders(train, features, 5, 100, metrics);
+        evaluateRecommenders(train, features, 5, 100, metrics);
     }
     
     static <F>void testDataset(String ratingsFile, String featuresFile, String separator, Parser<F> featureParser, int user, int item) 
@@ -75,7 +75,7 @@ public class Test {
         
         testData(ratings, features, user, item);
         
-        //testRecommenders(ratings, features, k, n, 3, 4);
+        testRecommenders(ratings, features, k, n, 3, 4);
 
         Ratings folds[] = ratings.randomSplit(0.8);
         Ratings train = folds[0];
@@ -87,7 +87,7 @@ public class Test {
             new Recall(test, threshold, cutoff),
         };
         
-        /*evaluateRecommenders(train, features, k, n, metrics);*/
+        evaluateRecommenders(train, features, k, n, metrics);
     }
     
     static <F>void testData(Ratings ratings, Features<F> features, int user, int item) {
@@ -105,7 +105,7 @@ public class Test {
         System.out.println();
     }
     
-    /*static <F> void testRecommenders(Ratings ratings, Features<F> features, int k, int n, int nUsers, int nItems) throws FileNotFoundException {
+    static <F> void testRecommenders(Ratings ratings, Features<F> features, int k, int n, int nUsers, int nItems) throws FileNotFoundException {
         Timer.reset();
         testRecommender(new RandomRecommender(ratings), n, nUsers, nItems);
         Timer.reset();
@@ -119,17 +119,17 @@ public class Test {
         Timer.reset();
         testRecommender(new NormUserKNNRecommender(ratings, sim, k, 2), n, nUsers, nItems); // Ahorramos un poco de tiempo reutilizando la similitud.
         Timer.reset();
-        sim = new CosineItemSimilarity(ratings);
+        /*sim = new CosineItemSimilarity(ratings);
         testRecommender(new ItemNNRecommender(ratings, sim), n, nUsers, nItems);
         
         Timer.reset();
         testRecommender(new CentroidRecommender<F>(ratings, new CosineFeatureSimilarity<F>(features)), n, nUsers, nItems);
         Timer.reset();
         sim = new JaccardFeatureSimilarity<F>(features);
-        testRecommender(new ItemNNRecommender(ratings, sim), n, nUsers, nItems);
-    }*/
+        testRecommender(new ItemNNRecommender(ratings, sim), n, nUsers, nItems);*/
+    }
 
-    /*static <U extends Comparable<U>,I extends Comparable<I>,F> void evaluateRecommenders(Ratings ratings, Features<F> features, int k, int n, Metric metrics[]) {
+    static <U extends Comparable<U>,I extends Comparable<I>,F> void evaluateRecommenders(Ratings ratings, Features<F> features, int k, int n, Metric metrics[]) {
         Timer.reset();
         evaluateRecommender(new RandomRecommender(ratings), n, metrics);
         Timer.reset();
@@ -143,15 +143,15 @@ public class Test {
         Timer.reset();
         evaluateRecommender(new NormUserKNNRecommender(ratings, sim, k, 2), n, metrics); // Ahorramos un poco de tiempo reutilizando la similitud.
         Timer.reset();
-        sim = new CosineItemSimilarity(ratings);
+        /*sim = new CosineItemSimilarity(ratings);
         evaluateRecommender(new ItemNNRecommender(ratings, sim), n, metrics);
         
         Timer.reset();
         evaluateRecommender(new CentroidRecommender<F>(ratings, new CosineFeatureSimilarity<F>(features)), n, metrics);
         Timer.reset();
         sim = new JaccardFeatureSimilarity<F>(features);
-        evaluateRecommender(new ItemNNRecommender(ratings, sim), n, metrics);
-    }*/
+        evaluateRecommender(new ItemNNRecommender(ratings, sim), n, metrics);*/
+    }
 
     static <U,I extends Comparable<I>> void testRecommender(Recommender recommender, int n, int nUsers, int nItems) throws FileNotFoundException {
         System.out.println("-------------------------");

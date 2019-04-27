@@ -25,8 +25,8 @@ public class Rmse implements Metric {
 
     @Override
     public double compute(Recommendation rec) {
-        double scoreParcial = 0, finalScore = 0;
-        int num_test = ratings.nRatings();
+        double scoreParcial = 0, finalScore;
+        int num_test = 0;
         Map <Integer, Double> rankingRatings;
 
         //Recorremos todos los usuarios
@@ -52,6 +52,9 @@ public class Rmse implements Metric {
                     //Finalmente aplicamos RMSE y se lo sumamos al score parcial
                     double squareResult= Math.pow(recommendedRating-rating,2);
                     scoreParcial+= squareResult;
+                    
+                    //Sumamos uno al numero de test validos
+                    num_test++;
                 }
             }
         }
@@ -60,6 +63,11 @@ public class Rmse implements Metric {
         finalScore=Math.sqrt(scoreParcial/num_test);
 
         return finalScore;
+    }
+    
+    @Override
+    public String toString(){
+        return "Rmse";
     }
 
 }

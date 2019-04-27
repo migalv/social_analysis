@@ -7,13 +7,11 @@ package es.uam.eps.bmi.recsys.metric;
 
 import es.uam.eps.bmi.recsys.Recommendation;
 import es.uam.eps.bmi.recsys.data.Ratings;
-import es.uam.eps.bmi.recsys.ranking.Ranking;
 import es.uam.eps.bmi.recsys.ranking.RankingElement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  *
@@ -31,55 +29,45 @@ public class Precision implements Metric {
         this.cutoff = cutoff;
     }
 
-        @Override
+    @Override
     public double compute(Recommendation rec) {
-        double precisionParcial = 0, precisionFinal = 0;
+        double precisionParcial = 0, precisionFinal, userCounter = 0;
 
         for (int current_user : this.ratings.getUsers()) {
-            //Creamos un mapa por usuario para guardar los ratings de todos los items
-            Map<Integer, Double> ratingMap = new HashMap<>();
-            Map<Integer, Double> ratingRec = new HashMap<>();
+            int counterRefactor = 0, positiveUser = 0;
 
-            //Añadimos al mapa todos los ratings de los items
-            this.ratings.getItems(current_user).forEach((current_item) -> {
-                double rating = this.ratings.getRating(current_user, current_item);
-                ratingMap.put(current_item, rating);
-            });
+            if (rec.getRecommendation(current_user).size() > 0) {
+                userCounter++;
 
-            for (RankingElement rankingRec : rec.getRecommendation(current_user)) {
-                ratingRec.put(rankingRec.getID(), rankingRec.getScore());
-            }
+                for (RankingElement rankingRec : rec.getRecommendation(current_user)) {
+                    Double scoreParcial = this.ratings.getRating(current_user, rankingRec.getID());
 
-            //Creamos una lista para poder ordenar el mapa
-            List<Map.Entry<Integer, Double>> listRec = new ArrayList<>(ratingRec.entrySet());
-            listRec.sort(Map.Entry.comparingByValue());
+                    if (scoreParcial != null && scoreParcial >= this.threshold) {
+                        positiveUser++;
+                    }
 
-            int counter = 0, positiveUser = 0, positiveRec = 0;
-            for (Map.Entry<Integer, Double> entry : listRec) {
-
-                if (entry.getValue() >= this.threshold) {
-                    positiveUser++;
-                }
-
-                if (ratingMap.containsKey(entry.getKey())) {
-                    if (ratingMap.get(entry.getKey()) >= this.threshold) {
-                        positiveRec++;
+                    counterRefactor++;
+                    if (counterRefactor == this.cutoff) {
+                        break;
                     }
                 }
+            }
 
-                counter++;
-                if (counter == this.cutoff) {
-                    precisionParcial += (positiveUser / positiveRec);
-                    break;
-                }
+            if (positiveUser > 0) {
+                precisionParcial += ((double) positiveUser / this.cutoff);
             }
 
         }
 
-        precisionFinal = (precisionParcial / this.ratings.getUsers().size());
+        precisionFinal = ((double) precisionParcial / userCounter);
 
         return precisionFinal;
 
+    }
+
+    @Override
+    public String toString() {
+        return "Precision" + "@" + this.cutoff;
     }
 
 }
