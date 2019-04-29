@@ -52,7 +52,7 @@ public class FeaturesImpl<F> implements Features<F> {
                     itemsReader = line.split(this.separator);
 
                     //Comprobamos que haya 3 elementos
-                    if (itemsReader.length == 3) {
+                    if (itemsReader.length > 2) {
                         //Añadimos una nueva caracteristica al elemento
                         this.setFeature(Integer.parseInt(itemsReader[0]), this.featureParser.parse(itemsReader[1]), Double.parseDouble(itemsReader[2]));
                     }
@@ -79,7 +79,7 @@ public class FeaturesImpl<F> implements Features<F> {
 
     @Override
     public void setFeature(int id, Object feature, double value) {
-
+        
         //Si existe el item
         if (items.containsKey(id)) {
             //Si contiene la caracteristica la remplazamos

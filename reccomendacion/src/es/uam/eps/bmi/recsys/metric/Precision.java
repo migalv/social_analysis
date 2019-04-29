@@ -8,10 +8,7 @@ package es.uam.eps.bmi.recsys.metric;
 import es.uam.eps.bmi.recsys.Recommendation;
 import es.uam.eps.bmi.recsys.data.Ratings;
 import es.uam.eps.bmi.recsys.ranking.RankingElement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 
 /**
  *
@@ -33,7 +30,7 @@ public class Precision implements Metric {
     public double compute(Recommendation rec) {
         double precisionParcial = 0, precisionFinal, userCounter = 0;
 
-        for (int current_user : this.ratings.getUsers()) {
+        for (int current_user :rec.getUsers()) {
             int counterRefactor = 0, positiveUser = 0;
 
             if (rec.getRecommendation(current_user).size() > 0) {
@@ -42,7 +39,7 @@ public class Precision implements Metric {
                 for (RankingElement rankingRec : rec.getRecommendation(current_user)) {
                     Double scoreParcial = this.ratings.getRating(current_user, rankingRec.getID());
 
-                    if (scoreParcial != null && scoreParcial >= this.threshold) {
+                    if (scoreParcial != null && scoreParcial > this.threshold) {
                         positiveUser++;
                     }
 
@@ -62,7 +59,6 @@ public class Precision implements Metric {
         precisionFinal = ((double) precisionParcial / userCounter);
 
         return precisionFinal;
-
     }
 
     @Override

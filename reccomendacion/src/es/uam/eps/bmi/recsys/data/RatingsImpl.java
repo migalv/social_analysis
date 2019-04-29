@@ -65,7 +65,7 @@ public class RatingsImpl implements Ratings {
                     itemsReader = line.split(this.separator);
 
                     //Comprobamos que haya 3 elementos
-                    if (itemsReader.length == 3) {
+                    if (itemsReader.length > 2) {
                         //Añadimos una nueva caracteristica al elemento
                         this.rate(Integer.parseInt(itemsReader[0]), Integer.parseInt(itemsReader[1]), Double.parseDouble(itemsReader[2]));
                     }

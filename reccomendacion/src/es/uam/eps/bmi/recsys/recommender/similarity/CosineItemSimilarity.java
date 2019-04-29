@@ -41,13 +41,13 @@ public class CosineItemSimilarity implements Similarity{
         for(int current_user:  this.ratings.getUsers(y)){
             double scoreCurrentUser=this.ratings.getRating(current_user, y);
             
-            scoreX+=Math.pow(scoreCurrentUser,2);
-            mapX.put(current_user, scoreCurrentUser);
+            scoreY+=Math.pow(scoreCurrentUser,2);
+            mapY.put(current_user, scoreCurrentUser);
         }
 
         //Guardamos en esta variable la suma del producto de los scores de los items que comparten ambos usuarios
-        parcialScore = mapX.keySet().stream().filter((current_user) -> (mapY.containsKey(current_user))).map((current_user) -> mapX.get(current_user) * mapY.get(current_user)).reduce(parcialScore, (accumulator, _item) -> accumulator + _item);
-    
+        parcialScore = mapX.keySet().stream().filter((current_item) -> (mapY.containsKey(current_item))).map((current_item) -> mapX.get(current_item) * mapY.get(current_item)).reduce(parcialScore, (accumulator, _item) -> accumulator + _item);
+
         //Calculamos la raiz de los vectores de los usuarios
         scoreX= Math.sqrt(scoreX);
         scoreY= Math.sqrt(scoreY);

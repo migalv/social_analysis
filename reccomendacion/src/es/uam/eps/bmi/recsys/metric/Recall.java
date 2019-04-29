@@ -27,19 +27,22 @@ public class Recall implements Metric {
 
     @Override
     public double compute(Recommendation rec) {
-        double precisionParcial = 0, precisionFinal,userCounter=0;
+        double precisionParcial = 0, precisionFinal, userCounter = 0;
 
-        for (int current_user : this.ratings.getUsers()) {
-            int counterRefactor = 0, positiveUser = 0,positiveItem=0;
-            
-            positiveItem = this.ratings.getItems(current_user).stream().filter((current_item) -> (this.ratings.getRating(current_user, current_item) >= this.threshold)).map((_item) -> 1).reduce(positiveItem, Integer::sum);
-            
-            if(rec.getRecommendation(current_user).size() > 0){
+        for (int current_user : rec.getUsers()) {
+            int counterRefactor = 0, positiveUser = 0, positiveItem = 0;
+
+            if (this.ratings.getUsers().contains(current_user)) {
+                positiveItem = this.ratings.getItems(current_user).stream().filter((current_item) -> (this.ratings.getItems(current_user).contains(current_item))).map((current_item) -> this.ratings.getRating(current_user, current_item)).filter((scoreParcial) -> (scoreParcial > this.threshold)).map((_item) -> 1).reduce(positiveItem, Integer::sum);
+            }
+
+            //positiveItem = this.ratings.getItems(current_user).stream().filter((current_item) -> (this.ratings.getRating(current_user, current_item) >= this.threshold)).map((_item) -> 1).reduce(positiveItem, Integer::sum);
+            if (rec.getRecommendation(current_user).size() > 0) {
                 userCounter++;
                 for (RankingElement rankingRec : rec.getRecommendation(current_user)) {
                     Double scoreParcial = this.ratings.getRating(current_user, rankingRec.getID());
 
-                    if (scoreParcial != null && scoreParcial >= this.threshold) {
+                    if (scoreParcial != null && scoreParcial > this.threshold) {
                         positiveUser++;
                     }
 
@@ -49,7 +52,7 @@ public class Recall implements Metric {
                     }
                 }
             }
-            
+
             if (positiveUser > 0) {
                 precisionParcial += ((double) positiveUser / positiveItem);
             }
@@ -61,10 +64,10 @@ public class Recall implements Metric {
         return precisionFinal;
 
     }
-    
+
     @Override
     public String toString() {
-        return "Recall"+"@"+ this.cutoff;
+        return "Recall" + "@" + this.cutoff;
     }
 
 }
