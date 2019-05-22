@@ -28,8 +28,8 @@ public class CosineFeatureSimilarity<F> extends FeatureSimilarity<F> {
         Map<F, Double> mapY = new HashMap<>();
 
         //Para el primer item guardamos todos los ratings en el mapa
-        for (F current_feature : this.getFeatures().getFeatures(x)) {
-            double scoreCurrentUser = this.getFeatures().getFeature(x, current_feature);
+        for (F current_feature : this.xFeatures.getFeatures(x)) {
+            double scoreCurrentUser = this.xFeatures.getFeature(x, current_feature);
 
             scoreX += Math.pow(scoreCurrentUser, 2);
             mapX.put(current_feature, scoreCurrentUser);

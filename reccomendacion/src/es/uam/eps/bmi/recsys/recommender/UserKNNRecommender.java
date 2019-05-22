@@ -20,12 +20,12 @@ import java.util.Objects;
  */
 public class UserKNNRecommender extends AbstractRecommender {
 
-    private final Similarity similiarity;
+    private final Similarity similarity;
     private final Map<Integer, Ranking> userSimilarity;
 
     public UserKNNRecommender(Ratings ratings, Similarity sim, int k) {
         super(ratings);
-        this.similiarity = sim;
+        this.similarity = sim;
 
         this.userSimilarity = new HashMap<>();
 
@@ -35,7 +35,7 @@ public class UserKNNRecommender extends AbstractRecommender {
 
             //Realizamos la similitud con cada usuario excepto con el mismo
             this.ratings.getUsers().stream().filter((sim_user) -> (!Objects.equals(current_user, sim_user))).forEachOrdered((sim_user) -> {
-                double similarityScore = this.similiarity.sim(current_user, sim_user);
+                double similarityScore = this.similarity.sim(current_user, sim_user);
 
                 //Lo añadimos al ranking de usuario
                 ranking.add(sim_user, similarityScore);
@@ -55,7 +55,7 @@ public class UserKNNRecommender extends AbstractRecommender {
             //Obtenemos el score del usuario vecino del item
             Double userScore = this.ratings.getRating(current_ranking.getID(), item);
 
-            if (userScore != null && userScore > 0) {
+            if (userScore != null && !userScore.isNaN() && userScore >= 0) {
                 //Lo multiplicamos por la similitud entre el usuario y el vecino del usuario
                 double finalUserScore = userScore * current_ranking.getScore();
 
@@ -71,7 +71,7 @@ public class UserKNNRecommender extends AbstractRecommender {
     
     @Override
     public String toString(){
-        return "user-based kNN " + this.similiarity;
+        return "user-based kNN " + this.similarity;
     }
 
 }

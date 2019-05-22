@@ -20,15 +20,13 @@ import java.util.Objects;
  */
 public class NormUserKNNRecommender extends AbstractRecommender {
 
-    private final Similarity similiarity;
-    private final int knn;
+    private final Similarity similarity;
     private final int minRating;
     private final Map<Integer, Ranking> userSimilarity;
 
     public NormUserKNNRecommender(Ratings ratings, Similarity sim, int k, int minRating) {
         super(ratings);
-        this.similiarity = sim;
-        this.knn = k;
+        this.similarity = sim;
         this.minRating = minRating;
 
         this.userSimilarity = new HashMap<>();
@@ -39,8 +37,8 @@ public class NormUserKNNRecommender extends AbstractRecommender {
 
             //Realizamos la similitud con cada usuario excepto con el mismo
             //Comprobamos que tengan un minimo de ratings para poder aceptarlo            
-            this.ratings.getUsers().stream().filter((sim_user) -> (!Objects.equals(sim_user, current_user) && this.ratings.getItems(sim_user).size() >= this.minRating)).forEachOrdered((sim_user) -> {
-                double similarityScore = this.similiarity.sim(current_user, sim_user);
+            this.ratings.getUsers().stream().filter((sim_user) -> (!Objects.equals(current_user, sim_user) && this.ratings.getItems(sim_user).size() >= this.minRating)).forEachOrdered((sim_user) -> {
+                double similarityScore = this.similarity.sim(current_user, sim_user);
 
                 //Lo añadimos al ranking de usuario
                 ranking.add(sim_user, similarityScore);
@@ -54,31 +52,37 @@ public class NormUserKNNRecommender extends AbstractRecommender {
 
     @Override
     public double score(int user, int item) {
-        double parcialScore = 0, userSumScore = 0;
+        double parcialScore = 0, userSumScore = 0, finalScore;
 
         for (RankingElement current_ranking : this.userSimilarity.get(user)) {
             //Obtenemos el score del usuario vecino del item
             Double userScore = this.ratings.getRating(current_ranking.getID(), item);
 
-            if (userScore != null && userScore > 0) {
+            if (userScore != null && !userScore.isNaN() && userScore >= 0) {
                 //Lo multiplicamos por la similitud entre el usuario y el vecino del usuario
                 double finalUserScore = userScore * current_ranking.getScore();
 
                 //Sumamos los valores pariciales del score de cada vecino
-                userSumScore += userSumScore;
+                userSumScore += current_ranking.getScore();
 
                 //Sumamos los scores parciales de cada vecino
                 parcialScore += finalUserScore;
             }
         }
 
-        return (double) parcialScore / userSumScore;
+        if (userSumScore != 0) {
+            finalScore = (double) parcialScore / userSumScore;
+        }else{
+            finalScore=0;
+        }
+
+        return finalScore;
 
     }
-    
+
     @Override
-    public String toString(){
-        return "normalized user-based kNN " + this.similiarity;
+    public String toString() {
+        return "normalized user-based kNN " + this.similarity;
     }
 
 }
